@@ -4,59 +4,68 @@
 # Assignment: Assignment 2: Bag ADT
 # Description: Implements a Bag ADT using a Dynamic Array.
 
+from dynamic_array import DynamicArray, DynamicArrayException
+
 class Bag:
     def __init__(self, start_bag=None):
+        """Initialize the Bag with elements if provided"""
         self._da = DynamicArray()
-        if start_bag is not None:
+        if start_bag:
             for value in start_bag:
                 self.add(value)
 
-    def __str__(self) -> str:
-        out = "BAG: " + str(self.size()) + " elements. ["
-        out += ', '.join([str(self._da.get_at_index(i)) for i in range(self._da.length())])
-        return out + ']'
+    def __str__(self):
+        """String representation of the Bag"""
+        items = ', '.join(str(self._da.get_at_index(i)) for i in range(self._da.length()))
+        return f"BAG: {self.size()} elements. [{items}]"
 
-    def size(self) -> int:
+    def size(self):
+        """Return number of items in Bag"""
         return self._da.length()
 
-    def add(self, value: object) -> None:
+    def add(self, value):
+        """Add item to Bag"""
         self._da.append(value)
 
-    def remove(self, value: object) -> bool:
+    def remove(self, value):
+        """Remove one instance of value from Bag if it exists"""
         for i in range(self._da.length()):
             if self._da.get_at_index(i) == value:
                 self._da.remove_at_index(i)
                 return True
         return False
 
-    def count(self, value: object) -> int:
+    def count(self, value):
+        """Count occurrences of value in Bag"""
         count = 0
         for i in range(self._da.length()):
             if self._da.get_at_index(i) == value:
                 count += 1
         return count
 
-    def clear(self) -> None:
+    def clear(self):
+        """Clear all items from the Bag"""
         self._da = DynamicArray()
 
-    def equal(self, second_bag: "Bag") -> bool:
-        if self.size() != second_bag.size():
+    def equal(self, other_bag):
+        """Check if two Bags contain the same items with the same frequencies"""
+        if self.size() != other_bag.size():
             return False
-
         for i in range(self._da.length()):
-            value = self._da.get_at_index(i)
-            if self.count(value) != second_bag.count(value):
+            if self.count(self._da.get_at_index(i)) != other_bag.count(self._da.get_at_index(i)):
                 return False
         return True
 
     def __iter__(self):
+        """Create an iterator for the Bag"""
         self._index = 0
         return self
 
     def __next__(self):
+        """Iterate over elements in the Bag"""
         if self._index < self._da.length():
-            value = self._da.get_at_index(self._index)
+            result = self._da.get_at_index(self._index)
             self._index += 1
-            return value
+            return result
         else:
             raise StopIteration
