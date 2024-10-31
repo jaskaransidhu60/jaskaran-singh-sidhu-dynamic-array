@@ -123,6 +123,12 @@ class DynamicArray:
             result = reduce_func(result, self._data[i])
         return result
 
+    def length(self) -> int:
+        """
+        Return the number of elements stored in the array.
+        """
+        return self._size
+
 def chunk(arr: DynamicArray) -> DynamicArray:
     """
     Separate an array into chunks of non-decreasing subsequences.
@@ -130,13 +136,15 @@ def chunk(arr: DynamicArray) -> DynamicArray:
     result = DynamicArray()
     if arr.length() == 0:
         return result
-    chunk = DynamicArray([arr[0]])
+    chunk = DynamicArray()
+    chunk.append(arr[0])
     for i in range(1, arr.length()):
         if arr[i] >= arr[i - 1]:
             chunk.append(arr[i])
         else:
             result.append(chunk)
-            chunk = DynamicArray([arr[i]])
+            chunk = DynamicArray()
+            chunk.append(arr[i])
     result.append(chunk)
     return result
 
@@ -146,7 +154,8 @@ def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
     """
     if arr.length() == 0:
         return DynamicArray(), 0
-    mode = DynamicArray([arr[0]])
+    mode = DynamicArray()
+    mode.append(arr[0])
     max_count = current_count = 1
     current_value = arr[0]
     for i in range(1, arr.length()):
@@ -154,14 +163,17 @@ def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
             current_count += 1
         else:
             if current_count > max_count:
-                mode = DynamicArray([current_value])
+                mode = DynamicArray()
+                mode.append(current_value)
                 max_count = current_count
             elif current_count == max_count:
                 mode.append(current_value)
             current_value = arr[i]
             current_count = 1
     if current_count > max_count:
-        return DynamicArray([current_value]), current_count
-    if current_count == max_count:
+        mode = DynamicArray()
+        mode.append(current_value)
+        max_count = current_count
+    elif current_count == max_count:
         mode.append(current_value)
     return mode, max_count
